@@ -1,3 +1,6 @@
+//Code by Sebastian Scaini
+//61 Chars max per line of dialogue.
+
 #include <Arduboy2.h>
 
 Arduboy2 arduboy;
@@ -582,6 +585,8 @@ void setup() {
   arduboy.setFrameRate(60);
 }
 
+int emotionIndex = 0;
+
 void loop() {
   // pause render until it's time for the next frame
   if (!(arduboy.nextFrame()))
@@ -593,77 +598,25 @@ void loop() {
   arduboy.setCursor(0, 10);
   arduboy.setTextWrap(true);
   
-  AdvancedPrint("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+  AdvancedPrint("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+
+  if(arduboy.justPressed(A_BUTTON)){
+    girl = !girl;
+  }
+
+  if(arduboy.justPressed(UP_BUTTON)){
+
+    emotionIndex++;
+
+    if(emotionIndex == 3){
+      emotionIndex = 0;
+    }
+    
+    currentEmotion = emotionIndex;
+  }
   
   DrawEmotion();
 
-/*
-  if(creditsDisplaying){
-    arduboy.drawSlowXYBitmap(0, 0, credits, 128, 128, WHITE);
-
-    if(arduboy.pressed(A_BUTTON) || arduboy.pressed(B_BUTTON) || arduboy.pressed(UP_BUTTON) || arduboy.pressed(LEFT_BUTTON) || arduboy.pressed(RIGHT_BUTTON)|| arduboy.pressed(DOWN_BUTTON)){
-      creditsDisplaying = false;
-    }
-  }
-  else if(controlsDisplaying){
-    arduboy.drawSlowXYBitmap(0, 0, controls, 128, 128, WHITE);
-
-    if(arduboy.pressed(A_BUTTON) || arduboy.pressed(B_BUTTON) || arduboy.pressed(UP_BUTTON) || arduboy.pressed(LEFT_BUTTON) || arduboy.pressed(RIGHT_BUTTON)|| arduboy.pressed(DOWN_BUTTON)){
-      controlsDisplaying = false;
-    }
-  }
-  else{
-    if (arduboy.pressed(UP_BUTTON)) {
-        if (arduboy.pressed(A_BUTTON)) {
-          beep.tone(beep.freq(1175.000));
-        } else if (arduboy.pressed(B_BUTTON)) {
-          beep.tone(beep.freq(1318.500));
-        }
-        else{
-          beep.tone(beep.freq(1318.500));
-        }
-        
-        arduboy.drawSlowXYBitmap(0, 0, mouthOpen, 128, 128, WHITE);
-    } else if (arduboy.pressed(DOWN_BUTTON)) {
-        if (arduboy.pressed(A_BUTTON)) {
-           beep.tone(beep.freq(698.500));
-        } else if (arduboy.pressed(B_BUTTON)) {
-           beep.tone(beep.freq(784.000));
-        }
-        else{
-          beep.tone(beep.freq(740.000));
-        }
-        
-      arduboy.drawSlowXYBitmap(0, 0, mouthOpen, 128, 128, WHITE);
-    } else if (arduboy.pressed(LEFT_BUTTON)) {
-        if (arduboy.pressed(A_BUTTON)) {
-           beep.tone(beep.freq(831.000));
-        } else if (arduboy.pressed(B_BUTTON)) {
-           beep.tone(beep.freq(988.000));
-        }
-        else{
-          beep.tone(beep.freq(880.000));
-        }
-        
-      arduboy.drawSlowXYBitmap(0, 0, mouthOpen, 128, 128, WHITE);
-    } else if (arduboy.pressed(RIGHT_BUTTON)) {
-        if (arduboy.pressed(A_BUTTON)) {
-           beep.tone(beep.freq(1046.500));
-        } else if (arduboy.pressed(B_BUTTON)) {
-           beep.tone(beep.freq(1046.500));
-        }
-        else{
-          beep.tone(beep.freq(1046.500));
-        }
-        
-      arduboy.drawSlowXYBitmap(0, 0, mouthOpen, 128, 128, WHITE);
-    }
-    else{
-      arduboy.drawSlowXYBitmap(0, 0, mouthClosed, 128, 128, WHITE);
-      beep.noTone();
-    }
-  }
-  */
   arduboy.display();
 }
 
