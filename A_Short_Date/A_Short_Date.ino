@@ -9,6 +9,18 @@ enum GameState {
   game
 };
 
+GameState currentState = credits;
+
+enum Emotion {
+  happy,
+  neutral,
+  sad
+};
+
+Emotion currentEmotion = happy;
+
+bool girl = false;
+
 const uint8_t PROGMEM girlHappy[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x20, 0x00, 0x00, 
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
 0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
@@ -578,11 +590,12 @@ void loop() {
   beep.timer();
   arduboy.pollButtons();
   arduboy.clear();
-  arduboy.setCursor(10, 10);
+  arduboy.setCursor(0, 10);
+  arduboy.setTextWrap(true);
   
-  arduboy.print("Howdy!");
-
-  arduboy.drawSlowXYBitmap(50, 0, boyHappy, 88, 64, WHITE);
+  AdvancedPrint("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+  
+  DrawEmotion();
 
 /*
   if(creditsDisplaying){
@@ -652,4 +665,51 @@ void loop() {
   }
   */
   arduboy.display();
+}
+
+void AdvancedPrint(String text){
+  String prepText;
+  
+  for(int i = 0; i < text.length(); i++){
+    prepText += text[i];
+    if(i % 10 == 0 && i != 0){
+      arduboy.println(prepText);
+      prepText = "";
+    }
+  }
+
+  arduboy.println(prepText);
+}
+
+void DrawEmotion(){
+  if(girl){
+    switch(currentEmotion){
+      case happy:
+        arduboy.drawSlowXYBitmap(50, 0, girlHappy, 88, 64, WHITE);
+        break;
+        
+      case sad:
+        arduboy.drawSlowXYBitmap(50, 0, girlSad, 88, 64, WHITE);
+        break;
+
+      case neutral:
+        arduboy.drawSlowXYBitmap(50, 0, girlNeutral, 88, 64, WHITE);
+        break;
+    }
+  }
+  else{
+        switch(currentEmotion){
+      case happy:
+        arduboy.drawSlowXYBitmap(50, 0, boyHappy, 88, 64, WHITE);
+        break;
+        
+      case sad:
+        arduboy.drawSlowXYBitmap(50, 0, boySad, 88, 64, WHITE);
+        break;
+
+      case neutral:
+        arduboy.drawSlowXYBitmap(50, 0, boyNeutral, 88, 64, WHITE);
+        break;
+    }
+  }
 }
