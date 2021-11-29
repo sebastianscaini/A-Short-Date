@@ -579,6 +579,18 @@ const uint8_t PROGMEM boyHappy[] = {0x00, 0x00, 0x00, 0x00, 0x01, 0xEF, 0x00, 0x
 bool controlsDisplaying = true;
 bool creditsDisplaying = true;
 
+enum GameplayState {
+  speaking,
+  choice
+};
+
+GameplayState currentGameplayState = speaking;
+
+String dialogue[] = {"Hi there!", "Are you who I'm supposed to be meeting?", "It's a pleasure to meet you!", "I guess we should order something.", "What do you want?", "Ooh coffee is good!", "Ah I love tea!", "That hit of caffeine is just what I needed."};
+Emotion emotions[] = {happy, neutral, happy, neutral, neutral, happy, happy, happy};
+
+int lineIndex = 0;
+
 void setup() {
   arduboy.begin();
   beep.begin();
@@ -588,7 +600,7 @@ void setup() {
 int emotionIndex = 0;
 
 void loop() {
-  // pause render until it's time for the next frame
+  
   if (!(arduboy.nextFrame()))
     return;
   arduboy.audio.enabled();
@@ -597,23 +609,18 @@ void loop() {
   arduboy.clear();
   arduboy.setCursor(0, 10);
   arduboy.setTextWrap(true);
-  
-  AdvancedPrint("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+  arduboy.setTextSize(1);
 
-  if(arduboy.justPressed(A_BUTTON)){
-    girl = !girl;
-  }
-
-  if(arduboy.justPressed(UP_BUTTON)){
-
-    emotionIndex++;
-
-    if(emotionIndex == 3){
-      emotionIndex = 0;
+  if(currentGameplayState == speaking){
+    if(arduboy.justPressed(A_BUTTON) || arduboy.justPressed(B_BUTTON)){
+      lineIndex++;
     }
-    
-    currentEmotion = emotionIndex;
   }
+  else if(currentGameplayState == choice){
+    
+  }
+  currentEmotion = emotions[lineIndex];
+  AdvancedPrint(dialogue[lineIndex]);
   
   DrawEmotion();
 
@@ -625,7 +632,7 @@ void AdvancedPrint(String text){
   
   for(int i = 0; i < text.length(); i++){
     prepText += text[i];
-    if(i % 10 == 0 && i != 0){
+    if(i % 9 == 0 && i != 0){
       arduboy.println(prepText);
       prepText = "";
     }
