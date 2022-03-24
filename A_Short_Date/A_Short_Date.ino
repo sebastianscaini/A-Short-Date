@@ -586,10 +586,12 @@ enum GameplayState {
 
 GameplayState currentGameplayState = speaking;
 
-String dialogue[] = {"Hi there!", "Are you who I'm supposed to be meeting?", "It's a pleasure to meet you!", "I guess we should order something.", "What do you want?", "Ooh coffee is good!", "Ah I love tea!", "That hit of caffeine is just what I needed."};
-Emotion emotions[] = {happy, neutral, happy, neutral, neutral, happy, happy, happy};
-
+String dialogue[] = {"Hi there!", "This super speed dating sure is an interesting concept!", "So...", "I've got this list of questions here", "that I'm supposed to ask.", "It says here to answer them truthfully.", "Then we'll see if we're compatible!", "Are you ready to get started?", "choice", "Hooray! Let's get started!", "That's too bad but we have to start now.", "Questions 1:"};
+Emotion emotions[] = {happy, neutral, neutral, neutral, neutral, neutral, happy, happy, neutral, happy, sad, neutral};
+String choices[] = {"Yes", "No"};
 int lineIndex = 0;
+int choiceIndex = 0;
+bool choiceMade = false;
 
 void setup() {
   arduboy.begin();
@@ -617,10 +619,42 @@ void loop() {
     }
   }
   else if(currentGameplayState == choice){
-    
+     if(arduboy.justPressed(A_BUTTON)){
+      if(!choiceMade){
+        lineIndex++;
+        choiceMade = true;
+      }
+      else{
+        lineIndex += 2;
+        choiceMade = false;
+        choiceIndex += 2;
+        currentGameplayState = speaking;
+      }
+    }
+    else if(arduboy.justPressed(B_BUTTON)){
+      if(!choiceMade){
+        lineIndex += 2;
+        choiceMade = true;
+      }
+      else{
+        lineIndex++;
+        choiceMade = false;
+        choiceIndex += 2;
+        currentGameplayState = speaking;
+      }
+    }
   }
+  
   currentEmotion = emotions[lineIndex];
-  AdvancedPrint(dialogue[lineIndex]);
+  
+  if(dialogue[lineIndex] == "choice"){
+    currentGameplayState = choice;
+    arduboy.println("(A) " + choices[choiceIndex]);
+    arduboy.println("(B) " + choices[choiceIndex + 1]);
+  }
+  else {
+    AdvancedPrint(dialogue[lineIndex]);
+  }
   
   DrawEmotion();
 
