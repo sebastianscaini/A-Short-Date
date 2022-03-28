@@ -22,7 +22,7 @@ enum Emotion {
 
 Emotion currentEmotion = happy;
 
-bool girl = false;
+bool girl = true;
 
 const uint8_t PROGMEM girlHappy[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x20, 0x00, 0x00, 
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
@@ -579,6 +579,9 @@ const uint8_t PROGMEM boyHappy[] = {0x00, 0x00, 0x00, 0x00, 0x01, 0xEF, 0x00, 0x
 bool controlsDisplaying = true;
 bool creditsDisplaying = true;
 
+int score = 0;
+bool aCorrect = false;
+
 enum GameplayState {
   speaking,
   choice
@@ -586,9 +589,10 @@ enum GameplayState {
 
 GameplayState currentGameplayState = speaking;
 
-String dialogue[] = {"Hi there!", "This super speed dating sure is an interesting concept!", "So...", "I've got this list of questions here", "that I'm supposed to ask.", "It says here to answer them truthfully.", "Then we'll see if we're compatible!", "Are you ready to get started?", "choice", "Hooray! Let's get started!", "That's too bad but we have to start now.", "Questions 1:"};
+String dialogue[] = {"Hi there!", "This super speed dating sure is an interesting concept!", "So...", "I've got this list of questions here", "that I'm supposed to ask.", "It says here to answer them truthfully.", "Then we'll see if we're compatible!", "Are you ready to get started?", "choice", "Hooray! Let's get started!", "That's too bad but we have to start now.", "Question 1:"};
 Emotion emotions[] = {happy, neutral, neutral, neutral, neutral, neutral, happy, happy, neutral, happy, sad, neutral};
 String choices[] = {"Yes", "No"};
+bool correctChoices[] = {true, false};
 int lineIndex = 0;
 int choiceIndex = 0;
 bool choiceMade = false;
@@ -623,6 +627,10 @@ void loop() {
       if(!choiceMade){
         lineIndex++;
         choiceMade = true;
+             
+        if(correctChoices[choiceIndex]){
+          score++;
+        }
       }
       else{
         lineIndex += 2;
@@ -635,6 +643,11 @@ void loop() {
       if(!choiceMade){
         lineIndex += 2;
         choiceMade = true;
+
+        if(correctChoices[choiceIndex + 1]){
+          score++;
+          Serial.print(score);
+        }
       }
       else{
         lineIndex++;
