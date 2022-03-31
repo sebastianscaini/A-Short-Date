@@ -22,7 +22,7 @@ enum Emotion {
 
 Emotion currentEmotion = happy;
 
-bool girl = true;
+int girl = 0;
 
 const uint8_t PROGMEM girlHappy[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x20, 0x00, 0x00, 
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
@@ -589,9 +589,10 @@ enum GameplayState {
 
 GameplayState currentGameplayState = speaking;
 
-String dialogue[] = {"Hi there!", "This super speed dating sure is an interesting concept!", "So...", "I've got this list of questions here", "that I'm supposed to ask.", "It says here to answer them truthfully.", "Then we'll see if we're compatible!", "Are you ready to get started?", "choice", "Hooray! Let's get started!", "That's too bad but we have to start now.", "Question 1:"};
-Emotion emotions[] = {happy, neutral, neutral, neutral, neutral, neutral, happy, happy, neutral, happy, sad, neutral};
-String choices[] = {"Yes", "No"};
+//String dialogue[] = {"Hi there!", "This super speed dating sure is an interesting concept!", "So...", "I've got this list of questions here", "that I'm supposed to ask.", "It says here to answer them truthfully.", "Then we'll see if we're compatible!", "Are you ready to get started?", "choice", "Hooray! Let's get started!", "That's too bad but we have to start now.", "Question 1:", "If you suddenly won the lottery, what would you spend the money on?", "choice", "That's kinda weird since we just met...", "It's always good to look after yourself!", "Next up is Question 2:"};
+String dialogue[] = {"Hi there!", "This is a small Visual Novel demo!", "Here, try this dialogue choice.", "choice", "Great! Thanks for participating!", "Too bad, you answered anyway!", "Hopefully it will become a full game one day...", "But for now this is all you'll get!", "Farewell!", "end"};
+Emotion emotions[] = {happy, happy, neutral, happy, sad, neutral, sad, happy};
+String choices[] = {"Sure!", "No!"};
 bool correctChoices[] = {true, false};
 int lineIndex = 0;
 int choiceIndex = 0;
@@ -601,6 +602,17 @@ void setup() {
   arduboy.begin();
   beep.begin();
   arduboy.setFrameRate(60);
+
+  int selection = random(0, 100);
+
+  if(selection > 50)
+  {
+    girl = 1;
+  }
+  else
+  {
+    girl = 0;  
+  }
 }
 
 int emotionIndex = 0;
@@ -665,6 +677,10 @@ void loop() {
     arduboy.println("(A) " + choices[choiceIndex]);
     arduboy.println("(B) " + choices[choiceIndex + 1]);
   }
+  else if(dialogue[lineIndex] == "end")
+  {
+    arduboy.exitToBootloader();
+  }
   else {
     AdvancedPrint(dialogue[lineIndex]);
   }
@@ -689,7 +705,7 @@ void AdvancedPrint(String text){
 }
 
 void DrawEmotion(){
-  if(girl){
+  if(girl == 0){
     switch(currentEmotion){
       case happy:
         arduboy.drawSlowXYBitmap(50, 0, girlHappy, 88, 64, WHITE);
