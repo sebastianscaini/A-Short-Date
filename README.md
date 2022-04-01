@@ -1,2 +1,2 @@
-# A-Short-Date
-A dating sim for Arduboy.
+# Arduboy Visual Novel Demo
+A quick demo to showcase Visual Novel mechanics running on the Arduboy.
